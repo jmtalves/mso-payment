@@ -1,7 +1,5 @@
 {
     "require": {
-        "firebase/php-jwt": "^6.9",
-	"vlucas/phpdotenv": "^5.5",
 	"enqueue/amqp-lib": "^0.10.19"
     },
     "require-dev": {
