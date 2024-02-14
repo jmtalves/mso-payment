@@ -7,6 +7,8 @@ ini_set("error_log", "error.log");
 require_once(__DIR__ . "/../autoload.php");
 
 use Libraries\MessageBroker;
+use Libraries\Encrypt;
+use Libraries\Request;
 use Models\Payment;
 
 /**
@@ -33,14 +35,9 @@ function createPaymentData($data)
  */
 function simulatePaymentProcessing($data)
 {
-    MessageBroker::sendMessage(
-        "userucupdateStatus",
-        [
-            "iduser" => $data['iduser'],
-            "iduc" => $data['iduc'],
-            "status " => 1
-        ]
-    );
+    $authorization = Encrypt::encryptJwt("internal-" . $data['iduser'] . "-1");
+    $url = "http://" . getenv('URL_SERVICE_USERUC') . "/api/useruc/" . $data['user'] . "/" . $data['uc'];
+    Request::callApi("PUT", $authorization['token'], $url, ["status" => 1]);
 }
 
 /**
@@ -49,14 +46,9 @@ function simulatePaymentProcessing($data)
  */
 function compensateForPaymentFailure($data)
 {
-    MessageBroker::sendMessage(
-        "userucupdateStatus",
-        [
-            "iduser" => $data['iduser'],
-            "iduc" => $data['iduc'],
-            "status " => 0
-        ]
-    );
+    $authorization = Encrypt::encryptJwt("internal-" . $data['iduser'] . "-1");
+    $url = "http://" . getenv('URL_SERVICE_USERUC') . "/api/useruc/" . $data['user'] . "/" . $data['uc'];
+    Request::callApi("DELETE", $authorization['token'], $url, ["status" => 0]);
 }
 
 MessageBroker::processMessage("createPayment", "createPaymentData");

@@ -1,6 +1,8 @@
 {
     "require": {
-	"enqueue/amqp-lib": "^0.10.19"
+        "firebase/php-jwt": "^6.9",
+        "enqueue/amqp-lib": "^0.10.19",
+        "guzzlehttp/guzzle": "^7.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.4"
